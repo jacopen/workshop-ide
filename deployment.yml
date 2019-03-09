@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: code-server
+spec:
+  selector:
+    matchLabels:
+      app: code-server
+      tier: code-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: code-server
+        tier: code-server
+    spec:
+      containers:
+      - name: code-server
+        command: ["code-server"]
+        args:
+        - /project
+        - --allow-http
+        - --password=foobar
+        image: jacopen/workshop-ide 
+        ports:
+        - containerPort: 8443
+        volumeMounts:
+        - name: code-server-storage
+          mountPath: /project
+      volumes:
+      - name: code-server-storage
+        persistentVolumeClaim:
+          claimName: code-server
+
